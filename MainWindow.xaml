@@ -1,0 +1,165 @@
+﻿<Window x:Class="VideoPlayerApplication.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:properties="clr-namespace:VideoPlayerApplication.Properties"
+        xmlns:local="clr-namespace:VideoPlayerApplication.View"
+        xmlns:commonGui="clr-namespace:VideoPlayerApplication.View.CommonGUI"
+        xmlns:local1="clr-namespace:VideoPlayerApplication.ViewModel"
+        mc:Ignorable="d"
+        WindowState="{Binding Source={x:Static properties:Settings1.Default},Path=AppWindowState, Mode=TwoWay}"
+        Title="{Binding VideoTitle}" 
+        Loaded="Window_Loaded" Closed="Window_Closed" SizeChanged="Window_SizeChanged"
+        DataContext="{StaticResource MainViewModel}" >
+    <Window.Resources>
+        <Style x:Key="CustomProgressBar" TargetType="{x:Type ProgressBar}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ProgressBar}">
+                        <Grid Background="Transparent">
+                            <Border Background="LightGray" CornerRadius="5"/>
+                            <Border x:Name="PART_TRACK" Background="LightGray" CornerRadius="5"/>
+                            <Border x:Name="PART_Indicator" Background="Gray" CornerRadius="5"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DataTemplate x:Key="VideoControlView" >
+            <local:NewMediaElement DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}},Path=DataContext}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="BlankView" DataType="{x:Type local1:MainWindowViewModel}">
+            <local:NoMediaPlayerControl DataContext="{StaticResource MainViewModel}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="FavouritesControl" DataType="{x:Type local1:MainWindowViewModel}">
+            <local:FavouritesControl DataContext="{StaticResource MainViewModel}"/>
+        </DataTemplate>
+        <Style x:Key="MenuStyle" TargetType="{x:Type Menu}">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style x:Key="MenuItemStyle" TargetType="{x:Type MenuItem}">
+            <Setter Property="IsEnabled" Value="{Binding}"/>
+        </Style>
+        <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <Style x:Key="ButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="BorderBrush" Value="WhiteSmoke" />
+            <Setter Property="Background" Value="WhiteSmoke" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="Background" Value="WhiteSmoke" />
+        </Style>
+    </Window.Resources>
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!--Menu items-->
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Left" Height="19" VerticalAlignment="Top" Width="800">
+            <Menu Width="50" Margin="2,0,0,0" Style="{StaticResource MenuStyle}">
+                <MenuItem Header="Media">
+                    <MenuItem Name="OpenFileMenuItem" Header="Open File" Command="{Binding OpenFileMenuitemCmd}"/>
+                    <MenuItem Name="SaveAsMenuItem" Header="Save As" Command="{Binding SaveAsMenuItemCmd}" IsEnabled="{Binding IsMediaLoaded}"/>
+                    <MenuItem Name="ExitMenuItem" Header="Exit"  Command="{Binding ExitMenuItemCmd}"/>
+                </MenuItem>
+            </Menu>
+            <Menu Width="50"  Margin="0,0,0,0" Style="{StaticResource MenuStyle}">
+                <MenuItem Header="Audio">
+                    <MenuItem Name="IncreaseVolumeMenuItem" Header="Increase Volume" IsEnabled="{Binding IsVideoOpen}" Command="{Binding NewMediaElementViewModel.IncreaseVolumeCmd}"/>
+                    <MenuItem Name="DecreaseVolumeMenuItem" Header="Decrease Volume" IsEnabled="{Binding IsVideoOpen}" Command="{Binding NewMediaElementViewModel.DecreaseVolumeCmd}"/>
+                    <MenuItem Name="MuteMenuItem" Header="Mute" IsEnabled="{Binding IsVideoOpen}" Command="{Binding NewMediaElementViewModel.MuteVolumeCmd}"/>
+                </MenuItem>
+            </Menu>
+            <Menu Width="50" Style="{StaticResource MenuStyle}">
+                <MenuItem Header="Video">
+                    <MenuItem Name="FavItem" Header="Add to Favourite" Command="{Binding AddToFavouriteCmd}"  IsEnabled="{Binding FavBtnEnabled,UpdateSourceTrigger=PropertyChanged}"/>
+                    <MenuItem Name="RemoveFavItem" Header="Remove From Favourite" Command="{Binding RemoveFavouriteCmd}" IsEnabled="{Binding RemoveFavBtnEnabled,UpdateSourceTrigger=PropertyChanged}"/>
+                    <MenuItem Name="PlayMenuItem" Header="Play" IsEnabled="{Binding IsVideoOpen}" Command="{Binding NewMediaElementViewModel.StartVideoCmd}"/>
+                    <MenuItem Name="StopMenuItem" Header="Stop" IsEnabled="{Binding IsVideoOpen}" Command="{Binding NewMediaElementViewModel.StopVideoCmd}"/>
+                </MenuItem>
+            </Menu>
+            <Menu Width="50" Margin="0,0,0,0" Style="{StaticResource MenuStyle}" >
+                <MenuItem Header="View" >
+                    <MenuItem Name="FavouritesMenuItem" Header="Favourites" Command="{Binding GoToFavCmd}"/>
+                </MenuItem>
+            </Menu>
+        </StackPanel>
+        <!--Right panel-->
+        <StackPanel Grid.Row="1" Grid.Column="0" Background="WhiteSmoke" Margin="5,0,5,5">
+            <commonGui:ButtonImage ContentText="Home" Source="/VideoPlayerApplication;component/Images/HomeButton.png" ButtonCommand="{Binding GoToHomeCmd}"/>
+            <commonGui:ButtonImage ContentText="Go To Player" Source="/VideoPlayerApplication;component/Images/player.png" ButtonCommand="{Binding GoToPlayerCmd}" IsEnabled="{Binding IsMediaLoaded}"/>
+            <commonGui:ButtonImage ContentText="Go To Favourites" Source="/VideoPlayerApplication;component/Images/Fav.png" ButtonCommand="{Binding GoToFavCmd}" />
+            <commonGui:ButtonImage ContentText="Download Video" Source="/VideoPlayerApplication;component/Images/Download.png" ButtonCommand="{Binding DownloadVideoCmd }"/>
+            <commonGui:ButtonImage ContentText="About File" Source="/VideoPlayerApplication;component/Images/About.png" ButtonCommand="{Binding AboutFileCmd}" IsEnabled="{Binding IsVideoOpen}"/>
+        </StackPanel>
+        <!--Content Controls-->
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions> 
+                <ContentControl  Grid.Row="0" Grid.Column="0" ContentTemplate="{StaticResource BlankView}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <ContentControl.Style>
+                    <Style TargetType="ContentControl">
+                        <Setter Property="Visibility" Value="Hidden" />
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding ShowFav}" Value="false" />
+                                    <Condition Binding="{Binding IsVideoOpen}" Value="false" />
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility" Value="Visible" />
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ContentControl.Style>
+            </ContentControl>
+                <ContentControl  Grid.Row="0" Grid.Column="0" ContentTemplate="{StaticResource FavouritesControl}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <ContentControl.Style>
+                        <Style TargetType="ContentControl">
+                            <Setter Property="Visibility" Value="Hidden" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding ShowHome}" Value="false" />
+                                        <Condition Binding="{Binding IsVideoOpen}" Value="false" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+            <ContentControl  Grid.Row="0" Grid.Column="0" ContentTemplate="{StaticResource VideoControlView}" DataContext="{Binding NewMediaElementViewModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <ContentControl.Style>
+                        <Style TargetType="ContentControl">
+                            <Setter Property="Visibility" Value="Hidden" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding DataContext.ShowHome,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, UpdateSourceTrigger=PropertyChanged}" Value="false" />
+                                    <Condition Binding="{Binding DataContext.ShowFav, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}},UpdateSourceTrigger=PropertyChanged}" Value="false" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+            </Grid>
+    </Grid>
+</Window>
+
+       
