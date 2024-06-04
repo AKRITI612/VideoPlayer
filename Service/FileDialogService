@@ -1,0 +1,81 @@
+using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace VideoPlayerApplication.Service
+{
+    public class FileDialogService : IDialogService
+    {
+        public string FilePath { get; set; }
+
+        public bool OpenFileDialog(string allVideoFilesFilter)
+        {
+            return OpenFileDialog(allVideoFilesFilter, string.Empty);
+        }
+
+        public bool SaveFileDialog(string allVideoFilesFilter)
+        {
+            return SaveAsFileDialog(allVideoFilesFilter, string.Empty);
+        }
+
+        /// <summary>
+        /// Invokes file dialog.
+        /// </summary>
+        /// <param name="pFilter"></param>
+        /// <param name="pTitle"></param>
+        /// <param name="pFilterIndex"></param>
+        /// <returns></returns>
+        public bool OpenFileDialog(string pFilter, string pTitle = "", int pFilterIndex = 1)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = pFilter,
+                FilterIndex = pFilterIndex
+            };
+
+            if (!string.IsNullOrEmpty(pTitle))
+            {
+                openFileDialog.Title = pTitle;
+            }
+           
+            if (openFileDialog.ShowDialog() == true)
+            {
+                FilePath = openFileDialog.FileName;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Invokes the save file dialog.
+        /// </summary>
+        /// <param name="pFilter"></param>
+        /// <param name="pInitialDirectory"></param>
+        /// <param name="pFilterIndex"></param>
+        /// <returns></returns>
+        public bool SaveAsFileDialog(string pFilter, string pInitialDirectory = "", int pFilterIndex = 1)
+        {
+            // Set up the Save As dialog.
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = pFilter,
+                FilterIndex = pFilterIndex
+            };
+            if (!string.IsNullOrWhiteSpace(pInitialDirectory))
+            {
+                saveFileDialog.InitialDirectory = pInitialDirectory;
+            }
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                FilePath = saveFileDialog.FileName;
+                return true;
+            }
+
+            return false;
+        }
+    }
+}
