@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="VideoPlayerApplication.View.NewMediaElement"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:commonGui="clr-namespace:VideoPlayerApplication.View.CommonGUI"
+             mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <commonGui:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!--Media Content-->
+        <Border BorderBrush="#FFABABAB" BorderThickness="1" Margin="0,2,2,2">
+            <ContentControl Grid.Row="0" Grid.Column="0" x:Name="VideoMediaElement" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                    
+                                Content="{Binding MediaElementObject,UpdateSourceTrigger=PropertyChanged}"/>
+        </Border>
+        <!--Media Controls-->
+        <Border Grid.Row="1" Grid.Column="0" BorderBrush="#FFABABAB" BorderThickness="1" Margin="0,2,2,2">
+            <Grid Background="WhiteSmoke">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel x:Name="ProgressStackPanel" Grid.Row="0" HorizontalAlignment="Stretch">
+                    <Grid Width="{Binding Path=ActualWidth, ElementName=ProgressStackPanel}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" Height="30"  HorizontalAlignment="Stretch" Content="{Binding VideoTimeRemainingText,FallbackValue=00:00/00:00}"/>
+                        <Slider Grid.Row="0" Grid.Column="1" Margin="1,7,0,0" Maximum="{Binding SliderMaximum}" Value="{Binding SliderValue}" IsMoveToPointEnabled="True" IsSelectionRangeEnabled="True"/>
+                    </Grid>
+                </StackPanel>
+                <StackPanel x:Name="ProgressStackPanel2" Grid.Row="1" HorizontalAlignment="Stretch">
+                    <Grid Width="{Binding Path=ActualWidth, ElementName=ProgressStackPanel2}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel  Grid.Row="0" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <Button x:Name="StartBtn" Height="20" Width="30" Content="Start" Margin="2,2,2,0" Command="{Binding StartVideoCmd}" IsEnabled="{Binding IsVideoPlaying,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource InverseBooleanConverter}}"/>
+                            <Button x:Name="PauseBtn"  Height="20"  Width="35" Content="Pause" Margin="2,2,2,0" Command="{Binding PauseVideoCmd}" IsEnabled="{Binding IsVideoPaused,Converter={StaticResource InverseBooleanConverter}}"/>
+                            <Button x:Name="StopBtn" Height="20" Width="30" Content="Stop" Margin="2,2,2,0" Command="{Binding StopVideoCmd}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <Label Content="Volume:" Height="30" Margin="10,-2,0,0" FontSize="15"/>
+                            <Slider Minimum="0" Maximum="100" Width="100" Margin="-2,4,0,0" IsMoveToPointEnabled="True" Value="{Binding VolumeLevel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Content="{Binding VolumeLevelDisplay,UpdateSourceTrigger=PropertyChanged}" Height="30" Margin="0,-2,0,0" FontSize="15"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

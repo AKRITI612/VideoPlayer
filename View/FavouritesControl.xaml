@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="VideoPlayerApplication.View.FavouritesControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <ListView ItemsSource="{Binding MyFavourites}" x:Name="listView" HorizontalAlignment="Stretch"  Margin="0,2,2,2" SelectedItem="{Binding SelectedListItem}" Focusable="True" SelectionMode="Single">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Video Title" DisplayMemberBinding="{Binding VideoName}" Width="200"/>
+                    <GridViewColumn Header="Video Type" DisplayMemberBinding="{Binding VideoType}" Width="100"/>
+                    <GridViewColumn Header="Video Size" DisplayMemberBinding="{Binding VideoSize}" Width="100"/>
+                    <GridViewColumn Header="Video Location"  DisplayMemberBinding="{Binding VideoLocation}" Width="400"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+   
+</UserControl>

@@ -1,0 +1,23 @@
+﻿<Window x:Class="VideoPlayerApplication.View.AboutDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local1="clr-namespace:VideoPlayerApplication.ViewModel"
+        mc:Ignorable="d"
+        x:Name="AboutDialogElement"
+        Title="About Information" Height="300" Width="450" WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize" Background="WhiteSmoke">
+    <Window.DataContext>
+        <local1:AboutDialogViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="10"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" BorderBrush="#FFABABAB" BorderThickness="1" Margin="7,7,7,7">
+            <TextBlock Text="{Binding AboutText}" TextWrapping="Wrap" FontSize="15" TextAlignment="Left" Margin="2,2.5" Background="White"/>
+        </Border>
+    </Grid>
+</Window>

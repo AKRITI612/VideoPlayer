@@ -1,0 +1,41 @@
+﻿<Window x:Class="VideoPlayerApplication.View.DownloadVideoControl"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local1="clr-namespace:VideoPlayerApplication.ViewModel"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:commonGui="clr-namespace:VideoPlayerApplication.View.CommonGUI"
+        mc:Ignorable="d"
+        x:Name="DownloadDialog"
+        Title="Download Video" Height="400" Width="500" Background="WhiteSmoke" WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+    <Window.DataContext>
+        <local1:DownloadVideoControlViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <commonGui:BooleanToVisibilityConverter x:Key="BooleanToVisConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" BorderBrush="#FFABABAB" BorderThickness="2" Margin="7,7,7,7" Background="White">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Enter a network URL:" TextWrapping="Wrap" FontSize="30" TextAlignment="Left" HorizontalAlignment="Center" Margin="7,7,7,7"/>
+                <TextBox Grid.Row="1" Height="40" Margin="7,7,7,7" Text="{Binding Url,UpdateSourceTrigger=PropertyChanged}" FontSize="20"/>
+                <ProgressBar Grid.Row="2" Height="10" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Value="{Binding DownloadProgress,UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+        </Border>
+        <StackPanel Grid.Row="1" Margin="7,7,7,7" Orientation="Horizontal">
+            <TextBlock Grid.Row="1" HorizontalAlignment="Left" Text="{Binding DownloadTextStatus}" Width="300" Margin="5"/>
+            <Button Grid.Row="1" Content="Play" VerticalAlignment="Bottom" Height="40" Width="70" HorizontalAlignment="Center"  Margin="5,0,0,0"  Command="{Binding PlayDownoadedVideoCmd}"/>
+            <Button Grid.Row="1" Content="Download" VerticalAlignment="Bottom" Height="40" Width="70" HorizontalAlignment="Right"  Margin="5,0,0,0" Command="{Binding DownVideoCmd}"/>
+        </StackPanel>
+    </Grid>
+</Window>
