@@ -1,1 +1,1 @@
-# VideoPlayer
+The Video Player Desktop Application provides users with a seamless experience for watching videos on their desktop. Users can open videos, save video, play, start, stop, download, and manage their favourites with ease.
